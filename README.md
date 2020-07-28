@@ -16,7 +16,12 @@ Cloud Platform 프로젝트를 만든 후 Google 스프레드 시트 API가 활�
 https://docs.google.com/spreadsheets/d/<이 부분에 있는게 스프레드 시트 ID>/edit#gid=0
 시트 ID 정보는 URL로 부터 얻을 수 있습니다.
 
-### 예제
+### 예제 1
 ```
 node app.js --csv true --json true
+```
+
+### 예제 2
+```
+node app.js --csv true --csvdir "C:\Users\MyComputer\Desktop" --json true --jsondir "C:\Users\MyComputer\Desktop"
 ```

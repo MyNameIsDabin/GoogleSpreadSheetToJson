@@ -19,6 +19,14 @@ const yargs = require('yargs')
             json: {
                 describe: 'json파일로 뽑기',
                 type: 'boolean'
+            },
+            csvdir: {
+                describe: 'csv파일 추출 경로',
+                type: 'string'
+            },
+            jsondir: {
+                describe: 'json파일 추출 경로',
+                type: 'string'
             }
         },
     });
@@ -47,10 +55,13 @@ const yargs = require('yargs')
         const csv = csvDictionary[title];
         const json = csv2json(csv, {parseNumbers: true, parseJSON: true, separator:","});
         if (yargs.argv.json) {
-            await fsPromises.writeFile(title + ".json", JSON.stringify(json));
+            const dir = (yargs.argv.jsondir) ? path.join(yargs.argv.jsondir, title) : title;
+            await fsPromises.writeFile(dir + ".json", JSON.stringify(json));
         }
         if (yargs.argv.csv) {
-            await fsPromises.writeFile(title + ".csv", csv);
+            const dir = (yargs.argv.csvdir) ? path.join(yargs.argv.csvdir, title) : title;
+            console.log(dir);
+            await fsPromises.writeFile(dir + ".csv", csv);
         }
     })
     console.log("csv to json 완료!");
