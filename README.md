@@ -6,22 +6,33 @@ Cloud Platform 프로젝트를 만든 후 Google 스프레드 시트 API가 활�
 [서비스 계정을 이용해서 사용하기](https://theoephraim.github.io/node-google-spreadsheet/#/getting-started/authentication?id=service-account)
 를 통해 얻은 서비스 계정 인증 키 Json 파일을 serviceAccountJson.json 로 이름을 변경하여 프로젝트에 포함시킵니다.
 
-### config.json 에 시트 ID 정보 추가하기
+### config.json 에 시트 정보 추가하기
 ```
 {
-    "sheetID": "<YOUR SPREAD SHEET ID FROM URL>",
-    //... 생략
+    "<스프레드 시트 A ID>": {
+        "SheetA": {
+            "csv" : "SheetA.csv",
+            "json" : "SheetA.json"
+        },
+        "SheetB": {
+            "csv" : "SheetB.csv",
+            "json" : "SheetB.json"
+        }
+    },
+    "<스프레드 시트 B ID>": {
+        "SheetA": {
+            "csv" : "SheetA.csv"
+        },
+        "SheetB": {
+            "csv" : "SheetB.csv"
+        }
+    }
 }
 ```
 https://docs.google.com/spreadsheets/d/<이 부분에 있는게 스프레드 시트 ID>/edit#gid=0
 시트 ID 정보는 URL로 부터 얻을 수 있습니다.
 
-### 예제 1
+### 예제
 ```
-node app.js --csv true --json true
-```
-
-### 예제 2
-```
-node app.js --csv true --csvdir "C:\Users\MyComputer\Desktop" --json true --jsondir "C:\Users\MyComputer\Desktop"
+node app.js --csv --json
 ```
