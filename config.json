@@ -1,3 +1,20 @@
 {
-    "sheetID": "<YOUR SPREAD SHEET ID FROM URL>"
+    "<스프레드 시트 A ID>": {
+        "SheetA": {
+            "csv" : "SheetA.csv",
+            "json" : "SheetA.json"
+        },
+        "SheetB": {
+            "csv" : "SheetB.csv",
+            "json" : "SheetB.json"
+        }
+    },
+    "<스프레드 시트 B ID>": {
+        "SheetA": {
+            "csv" : "SheetA.csv"
+        },
+        "SheetB": {
+            "csv" : "SheetB.csv"
+        }
+    }
 }
