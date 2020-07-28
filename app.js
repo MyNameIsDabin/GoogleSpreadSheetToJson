@@ -1,5 +1,9 @@
+const fs = require('fs');
+const fsPromises = fs.promises;
+const path = require('path');
 const config = require('./config.json');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
+const csv2json = require('csvjson-csv2json');
 const doc = new GoogleSpreadsheet(config.docID);
 
 const yargs = require('yargs')
@@ -16,7 +20,7 @@ const yargs = require('yargs')
                 describe: 'json파일로 뽑기',
                 type: 'boolean'
             }
-        }
+        },
     });
 
 (async () => {
@@ -38,4 +42,16 @@ const yargs = require('yargs')
             csvDictionary[sheet.title] = csv;
         }
     }
+
+    Object.keys(csvDictionary).forEach(async (title)=>{
+        const csv = csvDictionary[title];
+        const json = csv2json(csv, {parseNumbers: true, parseJSON: true, separator:","});
+        if (yargs.argv.json) {
+            await fsPromises.writeFile(title + ".json", JSON.stringify(json));
+        }
+        if (yargs.argv.csv) {
+            await fsPromises.writeFile(title + ".csv", csv);
+        }
+    })
+    console.log("csv to json 완료!");
 })();
