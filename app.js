@@ -4,7 +4,6 @@ const path = require('path');
 const config = require('./config.json');
 const { GoogleSpreadsheet } = require('google-spreadsheet');
 const csv2json = require('csvjson-csv2json');
-const doc = new GoogleSpreadsheet(config.docID);
 
 const yargs = require('yargs')
     .version("1.0.0")
@@ -19,26 +18,20 @@ const yargs = require('yargs')
             json: {
                 describe: 'json파일로 뽑기',
                 type: 'boolean'
-            },
-            csvdir: {
-                describe: 'csv파일 추출 경로',
-                type: 'string'
-            },
-            jsondir: {
-                describe: 'json파일 추출 경로',
-                type: 'string'
             }
         },
     });
 
-(async () => {
+const googleSpreadSheetToCSVOrJSON = async (docID) => {
+    const doc = new GoogleSpreadsheet(docID);
     await doc.useServiceAccountAuth(require('./serviceAccountJson.json'));
     await doc.loadInfo();
+    const sheetNames = Object.keys(config[docID]);
 
     const csvDictionary = {}
     for (let i=0; i<doc.sheetCount; i++) {
         const sheet = doc.sheetsByIndex[i];
-        if (config.sheets.includes(sheet.title)) { // config의 설정한 sheets 만 찾는다.
+        if (sheetNames.includes(sheet.title)) { // config의 설정한 sheets 만 찾는다.
             const rows = await sheet.getRows();
             const headerValues = sheet.headerValues + "\n";
             let csv = headerValues;
@@ -55,14 +48,16 @@ const yargs = require('yargs')
         const csv = csvDictionary[title];
         const json = csv2json(csv, {parseNumbers: true, parseJSON: true, separator:","});
         if (yargs.argv.json) {
-            const dir = (yargs.argv.jsondir) ? path.join(yargs.argv.jsondir, title) : title;
-            await fsPromises.writeFile(dir + ".json", JSON.stringify(json));
+            const jsonPath = config[docID][title].hasOwnProperty("json") ? config[docID][title]["json"] : title + ".json";
+            await fsPromises.writeFile(jsonPath, JSON.stringify(json));
+            console.log(jsonPath);
         }
         if (yargs.argv.csv) {
-            const dir = (yargs.argv.csvdir) ? path.join(yargs.argv.csvdir, title) : title;
-            console.log(dir);
-            await fsPromises.writeFile(dir + ".csv", csv);
+            const csvPath = config[docID][title].hasOwnProperty("csv") ? config[docID][title]["csv"] : title + ".csv";
+            await fsPromises.writeFile(csvPath, csv);
+            console.log(csvPath);
         }
-    })
-    console.log("csv to json 완료!");
-})();
+    });
+};
+
+Object.keys(config).forEach((docID) => googleSpreadSheetToCSVOrJSON(docID));

@@ -36,3 +36,6 @@ https://docs.google.com/spreadsheets/d/<이 부분에 있는게 스프레드 시
 ```
 node app.js --csv --json
 ```
+
+### Error: Google API error - [403] The caller does not have permission
+스프레드 시트 -> 우측 상단 공유 버튼 -> 서비스 계정 이메일 공유
