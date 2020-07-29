@@ -46,14 +46,14 @@ const googleSpreadSheetToCSVOrJSON = async (docID) => {
 
     Object.keys(csvDictionary).forEach(async (title)=>{
         const csv = csvDictionary[title];
-        const json = csv2json(csv, {parseNumbers: true, parseJSON: true, separator:","});
-        if (yargs.argv.json) {
-            const jsonPath = config[docID][title].hasOwnProperty("json") ? config[docID][title]["json"] : title + ".json";
+        if (yargs.argv.json && config[docID][title].hasOwnProperty("json")) {
+            const json = csv2json(csv, {parseNumbers: true, parseJSON: true, separator:","});
+            const jsonPath = config[docID][title]["json"];
             await fsPromises.writeFile(jsonPath, JSON.stringify(json));
             console.log(jsonPath);
         }
-        if (yargs.argv.csv) {
-            const csvPath = config[docID][title].hasOwnProperty("csv") ? config[docID][title]["csv"] : title + ".csv";
+        if (yargs.argv.csv && config[docID][title].hasOwnProperty("csv")) {
+            const csvPath = config[docID][title]["csv"];
             await fsPromises.writeFile(csvPath, csv);
             console.log(csvPath);
         }
